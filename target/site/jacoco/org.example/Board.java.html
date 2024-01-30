@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Board.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MavenMinesweeper</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Board.java</span></div><h1>Board.java</h1><pre class="source lang-java linenums">package org.example;
+import java.util.Random;
+
+public class Board {
+    private int rows;
+    private int columns;
+    private Cell[][] cells;
+    private boolean gameOver;
+
+<span class="fc" id="L10">    public Board(int rows, int columns) { //initialises the board with cells</span>
+<span class="fc" id="L11">        this.rows = rows;</span>
+<span class="fc" id="L12">        this.columns = columns;</span>
+<span class="fc" id="L13">        this.cells = new Cell[rows][columns];</span>
+<span class="fc" id="L14">        this.gameOver = false;</span>
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        for (int row = 0; row &lt; rows; row++) {</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">            for (int col = 0; col &lt; columns; col++) {</span>
+<span class="fc" id="L17">                cells[row][col] = new Cell();</span>
+            }
+        }
+
+<span class="fc" id="L21">    }</span>
+
+    public boolean isGameOver() { //checks whether game is over
+<span class="fc" id="L24">        return gameOver;</span>
+    }
+
+    public void setGameOver(boolean result) { //sets the game to be over
+<span class="fc" id="L28">        gameOver = result;</span>
+<span class="fc" id="L29">    }</span>
+
+    public boolean cellRevealedStatus(int r, int c) { //checks if cell is revealed
+<span class="fc" id="L32">        return (cells[r-1][c-1].isRevealed());</span>
+    }
+
+    public boolean cellFlaggedStatus(int r, int c) { //checks if cell is flagged
+<span class="fc" id="L36">        return (cells[r-1][c-1].isFlagged());</span>
+    }
+
+    public boolean checkWin() { //checks if player has won
+<span class="fc" id="L40">        boolean allNonMineCellsRevealed = true;</span>
+<span class="fc" id="L41">        boolean allMineCellsNotRevealed = true;</span>
+
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (int i = 0; i &lt; rows; i++) {</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            for (int j = 0; j &lt; columns; j++) {</span>
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">                if (cells[i][j].isRevealed() &amp;&amp; cells[i][j].isMine()) {</span>
+                    // If a mine cell is revealed, player hasn't won
+<span class="nc" id="L47">                    return false;</span>
+<span class="pc bpc" id="L48" title="3 of 4 branches missed.">                } else if (!cells[i][j].isRevealed() &amp;&amp; !cells[i][j].isMine()) {</span>
+                    // If a non-mine cell is not revealed, player hasn't won
+<span class="nc" id="L50">                    allNonMineCellsRevealed = false;</span>
+                }
+            }
+        }
+
+        // Player wins if all non-mine cells are revealed and all mine cells are not revealed
+<span class="fc" id="L56">        return allNonMineCellsRevealed;</span>
+    }
+
+    public void placeMines(int numberOfMines) { //randomly places mines, based on given difficulty
+<span class="fc" id="L60">        Random random = new Random();</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        for (int i = 0; i &lt; numberOfMines; i++) {</span>
+<span class="nc" id="L62">            int mineRow = random.nextInt(rows);</span>
+<span class="nc" id="L63">            int mineCol = random.nextInt(columns);</span>
+<span class="nc" id="L64">            boolean isMine = cells[mineRow][mineCol].isMine();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            int mineValue = isMine ? 1 : 0; //in case it chooses the same cell</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            switch (mineValue) {</span>
+                case (1) :
+<span class="nc" id="L68">                    int mineRow1 = random.nextInt(rows);</span>
+<span class="nc" id="L69">                    int mineCol1 = random.nextInt(columns);</span>
+<span class="nc" id="L70">                    cells[mineRow1][mineCol1].setMine(true);</span>
+                default:
+<span class="nc" id="L72">                    cells[mineRow][mineCol].setMine(true);</span>
+            }
+        }
+<span class="fc" id="L75">    }</span>
+
+    public boolean cellFlagChecker() { //checks if at least 1 cell is flagged
+<span class="nc" id="L78">        boolean flagChecker = false;</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        for (int i=0; i&lt;rows; i++) {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            for (int j=0; j&lt;columns; j++) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">                if (cells[i][j].isFlagged()) {</span>
+<span class="nc" id="L82">                    flagChecker = true;</span>
+                }
+            }
+        }
+<span class="nc" id="L86">        return flagChecker;</span>
+    }
+
+    public void flagCell(int r, int c) { //sets a given cell to be flagged
+<span class="fc" id="L90">        cells[r-1][c-1].setFlagged(true);</span>
+<span class="fc" id="L91">    }</span>
+
+    public void unflagCell(int r, int c) { //sets a given cell to be unflagged
+<span class="nc" id="L94">        cells[r-1][c-1].setFlagged(false);</span>
+<span class="nc" id="L95">    }</span>
+
+    public void revealCell(int r, int c) { //reveals cells based on chosen cell
+<span class="fc" id="L98">        r = r - 1;</span>
+<span class="fc" id="L99">        c = c - 1;</span>
+<span class="pc bpc" id="L100" title="1 of 4 branches missed.">        if (!cells[r][c].isRevealed() &amp;&amp; !cells[r][c].isFlagged()) {</span>
+<span class="fc" id="L101">            cells[r][c].reveal();</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">            if (cells[r][c].isMine()) {</span>
+<span class="nc" id="L103">                System.out.println(&quot;GAME OVER&quot;);</span>
+<span class="nc" id="L104">                setGameOver(true);</span>
+            }
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            else if (cells[r][c].getNeighbouringMines() == 0) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">                if (r-1 &gt;= 0) {</span>
+<span class="fc" id="L108">                    revealCell(r, c+1);</span>
+                }
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                if (r+1 &lt; rows) {</span>
+<span class="fc" id="L111">                    revealCell(r+2, c+1);</span>
+                }
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                if (c-1 &gt;= 0) {</span>
+<span class="fc" id="L114">                    revealCell(r+1, c);</span>
+                }
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (c+1 &lt; columns) {</span>
+<span class="fc" id="L117">                    revealCell(r+1, c+2);</span>
+                }
+<span class="fc bfc" id="L119" title="All 4 branches covered.">                if (r-1 &gt;=0 &amp;&amp; c-1 &gt;= 0) { // top left</span>
+<span class="fc" id="L120">                    revealCell(r, c);</span>
+                }
+<span class="fc bfc" id="L122" title="All 4 branches covered.">                if (r-1 &gt;= 0 &amp;&amp; c+1 &lt; columns) { //top right</span>
+<span class="fc" id="L123">                    revealCell(r,c+2);</span>
+                }
+<span class="fc bfc" id="L125" title="All 4 branches covered.">                if (r+1 &lt; rows &amp;&amp; c-1 &gt;= 0) { //bottom left</span>
+<span class="fc" id="L126">                    revealCell(r+2, c);</span>
+                }
+<span class="fc bfc" id="L128" title="All 4 branches covered.">                if (r+1 &lt; rows &amp;&amp; c+1 &lt; columns) {</span>
+<span class="fc" id="L129">                    revealCell(r+2, c+2);</span>
+                }
+            }
+        }
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">        else if (cells[r][c].isFlagged()) {</span>
+<span class="nc" id="L134">            System.out.println(&quot;Cell has already been revealed&quot;);</span>
+        }
+<span class="fc" id="L136">    }</span>
+
+    public void calculateNeighbouringMines() { //calculates neighbouring mines for each cell
+<span class="nc" id="L139">        int counter = 0;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        for (int i = 0; i &lt; rows; i++) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            for (int j = 0; j &lt; columns; j++) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (!cells[i][j].isMine()) {</span>
+<span class="nc bnc" id="L143" title="All 4 branches missed.">                    if (i - 1 &gt;= 0 &amp;&amp; cells[i-1][j].isMine()) { //checking up</span>
+<span class="nc" id="L144">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L146" title="All 4 branches missed.">                    if (i + 1 &lt; rows &amp;&amp; cells[i+1][j].isMine()) { //checking down</span>
+<span class="nc" id="L147">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L149" title="All 4 branches missed.">                    if (j - 1 &gt;= 0 &amp;&amp; cells[i][j-1].isMine()) { //checking left</span>
+<span class="nc" id="L150">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L152" title="All 4 branches missed.">                    if (j + 1 &lt; columns &amp;&amp; cells[i][j+1].isMine()) {  //checking right</span>
+<span class="nc" id="L153">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L155" title="All 6 branches missed.">                    if (i-1 &gt;=0 &amp;&amp; j-1 &gt;= 0 &amp;&amp; cells[i-1][j-1].isMine()) { //checking top left</span>
+<span class="nc" id="L156">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L158" title="All 6 branches missed.">                    if (i-1 &gt;= 0 &amp;&amp; j+1 &lt; columns &amp;&amp; cells[i-1][j+1].isMine()) { //checking top right</span>
+<span class="nc" id="L159">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L161" title="All 6 branches missed.">                    if (i+1 &lt; rows &amp;&amp; j-1 &gt;= 0 &amp;&amp; cells[i+1][j-1].isMine()) { //checking bottom left</span>
+<span class="nc" id="L162">                        ++counter;</span>
+                    }
+<span class="nc bnc" id="L164" title="All 6 branches missed.">                    if (i+1 &lt; rows &amp;&amp; j+1 &lt; columns &amp;&amp; cells[i+1][j+1].isMine()) {</span>
+<span class="nc" id="L165">                        ++counter;</span>
+                    }
+                }
+<span class="nc" id="L168">                cells[i][j].setNeighboursMines(counter);</span>
+<span class="nc" id="L169">                counter = 0;</span>
+            }
+        }
+<span class="nc" id="L172">    }</span>
+
+    public void displayBoard() { //displays board to console
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        for (int row = 0; row &lt; rows; row++) {</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            for (int col = 0; col &lt; columns; col++) {</span>
+<span class="nc" id="L177">                System.out.print(cells[row][col] + &quot; &quot;);</span>
+            }
+<span class="nc" id="L179">            System.out.println();</span>
+        }
+<span class="nc" id="L181">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

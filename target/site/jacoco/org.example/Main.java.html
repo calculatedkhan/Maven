@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MavenMinesweeper</a> &gt; <a href="index.source.html" class="el_package">org.example</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">package org.example;
+import java.util.Scanner;
+
+<span class="nc" id="L4">public class Main {</span>
+    public static void main(String[] args) {
+        int rows;
+        int columns;
+<span class="nc" id="L8">        int difficulty = 0;</span>
+        String difficultyReply;
+<span class="nc" id="L10">        int revealRow = 0;</span>
+<span class="nc" id="L11">        int revealCol = 0;</span>
+<span class="nc" id="L12">        int flagRow = 0;</span>
+<span class="nc" id="L13">        int flagCol = 0;</span>
+        String flagReply;
+<span class="nc" id="L15">        String unflagReply = &quot;&quot;;</span>
+<span class="nc" id="L16">        int unflagRow = 0;</span>
+<span class="nc" id="L17">        int unflagCol = 0;</span>
+<span class="nc" id="L18">        Scanner reader = new Scanner(System.in);</span>
+        while (true) {
+            // Prompt for rows
+<span class="nc" id="L21">            System.out.print(&quot;How many rows would you like? (between 5-25 inclusive) &quot;);</span>
+<span class="nc" id="L22">            String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">            if (input.isEmpty()) {</span>
+<span class="nc" id="L24">                System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L25">                continue;</span>
+            }
+<span class="nc bnc" id="L27" title="All 2 branches missed.">            if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L28">                System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L29">                continue; // Restart the loop for new input</span>
+            }
+
+<span class="nc" id="L32">            rows = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L33" title="All 4 branches missed.">            if (rows &lt; 5 || rows &gt; 25) {</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">                if (rows &lt; 5) {</span>
+<span class="nc" id="L35">                    System.out.println(&quot;Error: Number of rows must be at least 5.&quot;); // Error message for rows less than 5</span>
+                } else {
+<span class="nc" id="L37">                    System.out.println(&quot;Error: Number of rows cannot exceed 25.&quot;); // Error message for rows greater than 25</span>
+                }
+<span class="nc" id="L39">                continue; // Restart the loop for new input</span>
+            }
+            break;
+        }
+        while (true){
+            // Prompt for columns
+<span class="nc" id="L45">            System.out.print(&quot;How many columns would you like? (between 5-25 inclusive) &quot;);</span>
+<span class="nc" id="L46">            String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (input.isEmpty()) {</span>
+<span class="nc" id="L48">                System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L49">                continue;</span>
+            }
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L52">                System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L53">                continue; // Restart the loop for new input</span>
+            }
+
+<span class="nc" id="L56">            columns = Integer.parseInt(input); //converts string value into integer</span>
+<span class="nc bnc" id="L57" title="All 4 branches missed.">            if (columns &lt; 5 || columns &gt; 25) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                if (columns &lt; 5) {</span>
+<span class="nc" id="L59">                    System.out.println(&quot;Error: Number of columns must be at least 5.&quot;); // Error message for columns less than 5</span>
+                } else {
+<span class="nc" id="L61">                    System.out.println(&quot;Error: Number of columns cannot exceed 25.&quot;); // Error message for columns greater than 25</span>
+                }
+<span class="nc" id="L63">                continue; // Restart the loop for new input</span>
+            }
+
+            // If both rows and columns are valid, exit the loop
+            break;
+        }
+
+<span class="nc" id="L70">        Board minesweeperBoard = new Board(rows,columns); //create the board with given inputs</span>
+<span class="nc" id="L71">        int numberOfCells = rows*columns; //calculates total number of cells for difficulty</span>
+
+        while (true) {
+<span class="nc" id="L74">            System.out.print(&quot;What difficulty would you like? (easy, medium, hard) &quot;);</span>
+<span class="nc" id="L75">            difficultyReply = reader.next();</span>
+<span class="nc" id="L76">            difficultyReply = difficultyReply.toLowerCase(); //lowercase all input</span>
+            //checks if input is a word thats not easy, medium or hard
+<span class="nc bnc" id="L78" title="All 8 branches missed.">            if (difficultyReply.matches(&quot;[a-zA-Z]+&quot;) &amp;&amp; !difficultyReply.equals(&quot;easy&quot;) &amp;&amp; !difficultyReply.equals(&quot;medium&quot;) &amp;&amp; !difficultyReply.equals(&quot;hard&quot;)) {</span>
+<span class="nc" id="L79">                System.out.println(&quot;Error: Please only enter easy, medium or hard. &quot;);</span>
+<span class="nc" id="L80">                continue;</span>
+                //sets difficulty for given input
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            } else if (difficultyReply.equals(&quot;easy&quot;)) {</span>
+<span class="nc" id="L83">                difficulty = (int) Math.ceil((double) numberOfCells/4);</span>
+<span class="nc" id="L84">                break;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            } else if (difficultyReply.equals(&quot;medium&quot;)) {</span>
+<span class="nc" id="L86">                difficulty = (int) Math.ceil((double) numberOfCells/3);</span>
+<span class="nc" id="L87">                break;</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            } else if (difficultyReply.equals(&quot;hard&quot;)) {</span>
+<span class="nc" id="L89">                difficulty = (int) Math.ceil((double) numberOfCells/2);</span>
+<span class="nc" id="L90">                break;</span>
+            } else {
+<span class="nc" id="L92">                System.out.println(&quot;Invalid input: Please enter a valid word&quot;);</span>
+<span class="nc" id="L93">                continue;</span>
+            }
+        }
+<span class="nc" id="L96">        reader.nextLine(); //clears Scanner input, as error was occuring when asking for following input</span>
+        //difficulty = 0;
+<span class="nc" id="L98">        minesweeperBoard.placeMines(difficulty); //mines are randomly placed based on chosen difficulty</span>
+<span class="nc" id="L99">        minesweeperBoard.calculateNeighbouringMines(); //neighbouring mines are calculated for each cell</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        while (!minesweeperBoard.isGameOver()) { //loop continues until the game is over</span>
+<span class="nc" id="L101">            minesweeperBoard.displayBoard(); //displays board</span>
+            while (true) {
+                // Prompt for rows
+<span class="nc" id="L104">                System.out.print(&quot;What row would you like to choose? (between 1 and &quot; + rows + &quot;) &quot;);</span>
+<span class="nc" id="L105">                String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                if (input.isEmpty()) {</span>
+<span class="nc" id="L107">                    System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L108">                    continue;</span>
+                }
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L111">                    System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L112">                    continue; // Restart the loop for new input</span>
+                }
+
+<span class="nc" id="L115">                revealRow = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">                if (revealRow &lt; 1 || revealRow &gt; rows) {</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                    if (revealRow &lt; 5) {</span>
+<span class="nc" id="L118">                        System.out.println(&quot;Error: Row must be at least 1.&quot;); // Error message for rows less than 5</span>
+                    } else {
+<span class="nc" id="L120">                        System.out.println(&quot;Error: Row can't exceed &quot; + rows + &quot;.&quot;); // Error message for rows greater than 25</span>
+                    }
+<span class="nc" id="L122">                    continue; // Restart the loop for new input</span>
+                }
+                break;
+            }
+            while (true) {
+<span class="nc" id="L127">                System.out.print(&quot;What column would you like to choose? (between 1 and &quot; + columns + &quot;) &quot;);</span>
+<span class="nc" id="L128">                String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (input.isEmpty()) { //checks is input is empty</span>
+<span class="nc" id="L130">                    System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L131">                    continue;</span>
+                }
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L134">                    System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L135">                    continue; // Restart the loop for new input</span>
+                }
+
+<span class="nc" id="L138">                revealCol = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L139" title="All 4 branches missed.">                if (revealCol &lt; 1 || revealCol &gt; columns) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">                    if (revealCol &lt; 1) {</span>
+<span class="nc" id="L141">                        System.out.println(&quot;Error: Number of columns must be at least 1.&quot;); // Error message for columns less than 5</span>
+                    } else {
+<span class="nc" id="L143">                        System.out.println(&quot;Error: Columns can't exceed &quot; + columns + &quot;.&quot;); // Error message for columns greater than 25</span>
+                    }
+<span class="nc" id="L145">                    continue; // Restart the loop for new input</span>
+                }
+
+                // If both rows and columns are valid, exit the loop
+                break;
+            }
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (minesweeperBoard.cellRevealedStatus(revealRow, revealCol)) {  //if chosen cell has already been revealed, restarts loop</span>
+<span class="nc" id="L152">                System.out.println(&quot;Error: cell has already been revealed.&quot;);</span>
+<span class="nc" id="L153">                continue;</span>
+            }
+<span class="nc" id="L155">            minesweeperBoard.revealCell(revealRow, revealCol); //Reveal the cell</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (minesweeperBoard.checkWin()) {</span>
+<span class="nc" id="L157">                System.out.println(&quot;YOU WIN&quot;);</span>
+<span class="nc" id="L158">                minesweeperBoard.setGameOver(true);</span>
+<span class="nc" id="L159">                break;</span>
+            }
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (!minesweeperBoard.isGameOver()) { //If the game isn't over, display the board</span>
+<span class="nc" id="L162">                minesweeperBoard.displayBoard();</span>
+            } else { //If they've chosen the mine breaks loop to end game
+                break;
+            }
+
+            while (true) {
+<span class="nc" id="L168">                System.out.print(&quot;Would you like to flag a cell? (yes or no) &quot;);</span>
+<span class="nc" id="L169">                flagReply = reader.next();</span>
+<span class="nc" id="L170">                flagReply = flagReply.toLowerCase();</span>
+<span class="nc bnc" id="L171" title="All 6 branches missed.">                if (flagReply.matches(&quot;[a-zA-Z]+&quot;) &amp;&amp; !flagReply.equals(&quot;yes&quot;) &amp;&amp; !flagReply.equals(&quot;no&quot;)) {</span>
+<span class="nc" id="L172">                    System.out.println(&quot;Error: Please only enter yes or no&quot;);</span>
+<span class="nc" id="L173">                    reader.next();</span>
+<span class="nc" id="L174">                    continue;</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                } else if (flagReply.equals(&quot;yes&quot;)) {</span>
+<span class="nc" id="L176">                    reader.nextLine();</span>
+                    while (true) {
+                        // Prompt for rows
+<span class="nc" id="L179">                        System.out.print(&quot;What row would you like to choose? (between 1 and &quot; + rows + &quot;) &quot;);</span>
+<span class="nc" id="L180">                        String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                        if (input.isEmpty()) {</span>
+<span class="nc" id="L182">                            System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L183">                            continue;</span>
+                        }
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                        if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L186">                            System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L187">                            continue; // Restart the loop for new input</span>
+                        }
+
+<span class="nc" id="L190">                        flagRow = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L191" title="All 4 branches missed.">                        if (flagRow &lt; 1 || flagRow &gt; rows) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                            if (flagRow &lt; 5) {</span>
+<span class="nc" id="L193">                                System.out.println(&quot;Error: Row must be at least 1.&quot;); // Error message for rows less than 5</span>
+                            } else {
+<span class="nc" id="L195">                                System.out.println(&quot;Error: Row can't exceed &quot; + rows + &quot;.&quot;); // Error message for rows greater than 25</span>
+                            }
+<span class="nc" id="L197">                            continue; // Restart the loop for new input</span>
+                        }
+                        break;
+                    }
+                    while (true) {
+<span class="nc" id="L202">                        System.out.print(&quot;What column would you like to choose? (between 1 and &quot; + columns + &quot;) &quot;);</span>
+<span class="nc" id="L203">                        String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                        if (input.isEmpty()) {</span>
+<span class="nc" id="L205">                            System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L206">                            continue;</span>
+                        }
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                        if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L209">                            System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L210">                            continue; // Restart the loop for new input</span>
+                        }
+
+<span class="nc" id="L213">                        flagCol = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L214" title="All 4 branches missed.">                        if (flagCol &lt; 1 || flagCol &gt; columns) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                            if (flagCol &lt; 1) {</span>
+<span class="nc" id="L216">                                System.out.println(&quot;Error: Number of columns must be at least 1.&quot;); // Error message for columns less than 5</span>
+                            } else {
+<span class="nc" id="L218">                                System.out.println(&quot;Error: Columns can't exceed &quot; + columns + &quot;.&quot;); // Error message for columns greater than 25</span>
+                            }
+<span class="nc" id="L220">                            continue; // Restart the loop for new input</span>
+                        }
+
+                        // If both rows and columns are valid, exit the loop
+                        break;
+                    }
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                    if (minesweeperBoard.cellRevealedStatus(flagRow,flagCol)) { //Gives error if chosen cell to flag has been revealed</span>
+<span class="nc" id="L227">                        System.out.println(&quot;Error: Cell has already been revealed.&quot;);</span>
+<span class="nc" id="L228">                        continue;</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                    } else if (minesweeperBoard.cellFlaggedStatus(flagRow, flagCol)) { //Gives error if chosen cell to flag has already been flagged</span>
+<span class="nc" id="L230">                        System.out.println(&quot;Error: Cell has already been flagged.&quot;);</span>
+<span class="nc" id="L231">                        continue;</span>
+                    }
+<span class="nc" id="L233">                    minesweeperBoard.flagCell(flagRow,flagCol);</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">                } else if (flagReply.equals(&quot;no&quot;)) { //if user doesn't want to flag a cell, exits loop</span>
+<span class="nc" id="L235">                    reader.nextLine();</span>
+<span class="nc" id="L236">                    break;</span>
+                } else {
+<span class="nc" id="L238">                    System.out.println(&quot;Invalid input: Please enter a valid word (yes or no)&quot;); //if user inputs a word buts its not yes/no, gives error</span>
+<span class="nc" id="L239">                    continue;</span>
+                } break;
+            }
+
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            while (minesweeperBoard.cellFlagChecker()) { //loop continues while at least 1 cell is flagged</span>
+<span class="nc" id="L244">                System.out.print(&quot;Would you like to unflag a cell? (yes or no) &quot;);</span>
+<span class="nc" id="L245">                unflagReply = reader.next();</span>
+<span class="nc" id="L246">                unflagReply = unflagReply.toLowerCase();</span>
+<span class="nc bnc" id="L247" title="All 6 branches missed.">                if (unflagReply.matches(&quot;[a-zA-Z]+&quot;) &amp;&amp; !unflagReply.equals(&quot;yes&quot;) &amp;&amp; !unflagReply.equals(&quot;no&quot;)) {</span>
+<span class="nc" id="L248">                    System.out.println(&quot;Error: Please only enter yes or no&quot;);</span>
+<span class="nc" id="L249">                    reader.next();</span>
+<span class="nc" id="L250">                    continue;</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                } else if (unflagReply.equals(&quot;yes&quot;)) {</span>
+<span class="nc" id="L252">                    reader.nextLine();</span>
+                    while (true) {
+                        // Prompt for rows
+<span class="nc" id="L255">                        System.out.print(&quot;What row would you like to choose? (between 1 and &quot; + rows + &quot;) &quot;);</span>
+<span class="nc" id="L256">                        String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                        if (input.isEmpty()) {</span>
+<span class="nc" id="L258">                            System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L259">                            continue;</span>
+                        }
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                        if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L262">                            System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L263">                            continue; // Restart the loop for new input</span>
+                        }
+
+<span class="nc" id="L266">                        unflagRow = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L267" title="All 4 branches missed.">                        if (unflagRow &lt; 1 || unflagRow &gt; rows) {</span>
+<span class="nc bnc" id="L268" title="All 2 branches missed.">                            if (unflagRow &lt; 5) {</span>
+<span class="nc" id="L269">                                System.out.println(&quot;Error: Row must be at least 1.&quot;); // Error message for rows less than 5</span>
+                            } else {
+<span class="nc" id="L271">                                System.out.println(&quot;Error: Row can't exceed &quot; + rows + &quot;.&quot;); // Error message for rows greater than 25</span>
+                            }
+<span class="nc" id="L273">                            continue; // Restart the loop for new input</span>
+                        }
+                        break;
+                    }
+                    while (true) {
+<span class="nc" id="L278">                        System.out.print(&quot;What column would you like to choose? (between 1 and &quot; + columns + &quot;) &quot;);</span>
+<span class="nc" id="L279">                        String input = reader.nextLine().trim();</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">                        if (input.isEmpty()) {</span>
+<span class="nc" id="L281">                            System.out.println(&quot;Error: Input cannot be empty.&quot;);</span>
+<span class="nc" id="L282">                            continue;</span>
+                        }
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                        if (!input.matches(&quot;\\d+&quot;)) { //check if input is made of only digits</span>
+<span class="nc" id="L285">                            System.out.println(&quot;Invalid input. Please enter an integer value.&quot;); // Error message for non-integer input</span>
+<span class="nc" id="L286">                            continue; // Restart the loop for new input</span>
+                        }
+
+<span class="nc" id="L289">                        unflagCol = Integer.parseInt(input);</span>
+<span class="nc bnc" id="L290" title="All 4 branches missed.">                        if (unflagCol &lt; 1 || unflagCol &gt; columns) {</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">                            if (unflagCol &lt; 1) {</span>
+<span class="nc" id="L292">                                System.out.println(&quot;Error: Number of columns must be at least 1.&quot;); // Error message for columns less than 5</span>
+                            } else {
+<span class="nc" id="L294">                                System.out.println(&quot;Error: Columns can't exceed &quot; + columns + &quot;.&quot;); // Error message for columns greater than 25</span>
+                            }
+<span class="nc" id="L296">                            continue; // Restart the loop for new input</span>
+                        }
+
+                        // If both rows and columns are valid, exit the loop
+                        break;
+                    }
+<span class="nc bnc" id="L302" title="All 2 branches missed.">                    if (minesweeperBoard.cellRevealedStatus(unflagRow,unflagCol)) { //Throws error is user attempts to unflag a cell that has been revealed</span>
+<span class="nc" id="L303">                        System.out.println(&quot;Error: Cell has already been revealed.&quot;);</span>
+<span class="nc" id="L304">                        continue;</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                    } else if (!minesweeperBoard.cellFlaggedStatus(unflagRow, unflagCol)) { //Throws error if user attempts to unflag a cell that hasn't been flagged</span>
+<span class="nc" id="L306">                        System.out.println(&quot;Error: Cell hasn't been flagged.&quot;);</span>
+<span class="nc" id="L307">                        continue;</span>
+                    }
+<span class="nc" id="L309">                    minesweeperBoard.unflagCell(unflagRow, unflagCol); //unflags chosen cell</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">                } else if (unflagReply.equals(&quot;no&quot;)) { //leaves loop if input is no</span>
+<span class="nc" id="L311">                    reader.nextLine();</span>
+<span class="nc" id="L312">                    break;</span>
+                } else {
+<span class="nc" id="L314">                    System.out.println(&quot;Invalid input: Please enter a valid word (yes or no)&quot;);</span>
+<span class="nc" id="L315">                    continue;</span>
+                } break;
+            }
+        }
+<span class="nc" id="L319">        minesweeperBoard.displayBoard();</span>
+<span class="nc" id="L320">    }</span>
+}
+
+/*
+
+
+ */
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

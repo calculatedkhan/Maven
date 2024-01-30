@@ -2,7 +2,7 @@ import org.example.Board;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BoardTestingSuite {
+public class BoardTest {
 
     @Test
     public void revealingCellCheck() {
